@@ -4,7 +4,9 @@ WORKDIR /tmp
 
 ENV POETRY_HOME="/opt/poetry" PATH="${PATH}:/opt/poetry/bin"
 
-RUN curl -sSL https://install.python-poetry.org | python - -y && \
+COPY ./poetry-shell.py /tmp/poetry-shell.py
+
+RUN python /tmp/poetry-shell.py -y && \
   poetry self add poetry-plugin-export
 
 COPY ./pyproject.toml ./poetry.lock* /tmp/
