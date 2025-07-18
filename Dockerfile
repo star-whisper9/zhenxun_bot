@@ -2,6 +2,11 @@ FROM python:3.11-bookworm AS requirements-stage
 
 WORKDIR /tmp
 
+RUN sed -i 's|http://deb.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sources.list
+
+ENV POETRY_HOME="/opt/poetry" PATH="${PATH}:/opt/poetry/bin"
+ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+
 ENV POETRY_HOME="/opt/poetry" PATH="${PATH}:/opt/poetry/bin"
 
 COPY ./poetry-shell.py /tmp/poetry-shell.py
