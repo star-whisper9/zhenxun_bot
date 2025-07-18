@@ -1,0 +1,65 @@
+services:
+  zhenxun-bot:
+    image: zhenxun-bot:latest
+    container_name: zhenxun-bot
+    # ports:
+    #   - "8080:8080"
+    depends_on:
+      - db
+      - napcat
+    environment:
+      # use host proxy(lan)
+      - http_proxy=http://172.0.0.1:10809
+      - https_proxy=http://172.0.0.1:10809
+    volumes:
+      - ./.env.dev:/app/zhenxun/.env.dev:ro # read-only config file
+      - ./zhenxun/data:/app/zhenxun/data
+      - ./zhenxun/resources:/app/zhenxun/resources
+      - ./zhenxun/plugins:/app/zhenxun/zhenxun/plugins # local installed plugins
+      - ./zhenxun/log:/app/zhenxun/log
+      - ./zhenxun/python_site_packages:/usr/local/lib/python3.11/site-packages # python dependencies
+      - ./nonebot2:/root/.local/share/nonebot2 # nb2 local data(local-store plugin)
+  restart: always
+
+  db:
+    image: postgres:15
+    container_name: zhenxun-db
+    # ports:
+    #   - "5432:5432"
+    environment:
+      POSTGRES_DB: zhenxun
+      POSTGRES_USER: zhenxun
+      POSTGRES_PASSWORD: zhenxun_bot
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    restart: always
+
+  napcat:
+    image: mlikiowa/napcat-docker:latest
+    container_name: napcat
+    environment:
+      - NAPCAT_UID=0
+      - NAPCAT_GID=0
+    # ports:
+    #   - "6099:6099"
+    #   - "3000:3000"
+    #   - "3001:3001"
+    volumes:
+      - ./napcat/qq:/app/.config/QQ
+      - ./napcat/config:/app/napcat/config
+    restart: always
+    mac_address: F4:1A:9C:E6:46:39
+
+  # using nginx as a reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: zhenxun-nginx
+    depends_on:
+      - zhenxun-bot
+      - napcat
+    ports:
+      - "8080:8080"
+      - "6099:6099"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: always

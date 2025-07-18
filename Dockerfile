@@ -45,7 +45,33 @@ ENV TZ=Asia/Shanghai PYTHONUNBUFFERED=1
 EXPOSE 8080
 
 RUN apt update && \
-    apt install -y --no-install-recommends curl fontconfig fonts-noto-color-emoji \
+    apt install -y --no-install-recommends \
+        curl \
+        fontconfig \
+        fonts-noto-color-emoji \
+        libglib2.0-0 \
+        libsm6 \
+        libxrender1 \
+        libxext6 \
+        libegl1 \
+        libgl1 \
+        libgl1-mesa-glx \
+        libglib2.0-bin \
+        libgomp1 \
+        libxcomposite1 \
+        libxdamage1 \
+        libxi6 \
+        libxtst6 \
+        libnss3 \
+        libatk1.0-0 \
+        libatk-bridge2.0-0 \
+        libcups2 \
+        libdrm2 \
+        libgbm1 \
+        libpango-1.0-0 \
+        libpangocairo-1.0-0 \
+        libxrandr2 \
+        libasound2 \
     && apt clean \
     && fc-cache -fv \
     && apt-get purge -y --auto-remove curl \
@@ -62,6 +88,6 @@ RUN playwright install --with-deps chromium \
 
 COPY --from=metadata-stage /tmp/VERSION /app/VERSION
 
-VOLUME ["/app/zhenxun/data", "/app/zhenxun/resources", "/app/zhenxun/log"]
+# VOLUME ["/app/zhenxun/data", "/app/zhenxun/resources", "/app/zhenxun/log"]
 
 CMD ["python", "bot.py"]
