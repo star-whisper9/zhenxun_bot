@@ -1,6 +1,6 @@
 services:
   zhenxun-bot:
-    image: zhenxun-bot:latest
+    image: zhenxun-bot:self-0.0.7
     container_name: zhenxun-bot
     # ports:
     #   - "8080:8080"
@@ -8,18 +8,20 @@ services:
       - db
       - napcat
     environment:
-      # use host proxy(lan)
       - http_proxy=http://172.0.0.1:10809
       - https_proxy=http://172.0.0.1:10809
     volumes:
-      - ./.env.dev:/app/zhenxun/.env.dev:ro # read-only config file
+      - ./.env.dev:/app/zhenxun/.env.dev:ro
       - ./zhenxun/data:/app/zhenxun/data
       - ./zhenxun/resources:/app/zhenxun/resources
-      - ./zhenxun/plugins:/app/zhenxun/zhenxun/plugins # local installed plugins
+      - ./zhenxun/plugins:/app/zhenxun/zhenxun/plugins
       - ./zhenxun/log:/app/zhenxun/log
-      - ./zhenxun/python_site_packages:/usr/local/lib/python3.11/site-packages # python dependencies
-      - ./nonebot2:/root/.local/share/nonebot2 # nb2 local data(local-store plugin)
-  restart: always
+      - ./zhenxun/python_site_packages:/usr/local/lib/python3.11/site-packages
+      - ./zhenxun/root-home:/root
+    restart:
+      always
+      #command: bash /app/zhenxun/dockerfiles/docker-requirement.sh && bash
+    command: python /app/zhenxun/bot.py
 
   db:
     image: postgres:15
@@ -50,7 +52,6 @@ services:
     restart: always
     mac_address: F4:1A:9C:E6:46:39
 
-  # using nginx as a reverse proxy
   nginx:
     image: nginx:alpine
     container_name: zhenxun-nginx
