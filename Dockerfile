@@ -43,6 +43,14 @@ RUN apt update && \
     apt install -y --no-install-recommends \
         fontconfig \
         fonts-noto-color-emoji \
+        fonts-noto-cjk \
+        fonts-noto-cjk-extra \
+        fonts-wqy-microhei \
+        fonts-wqy-zenhei \
+        fonts-arphic-ukai \
+        fonts-arphic-uming \
+        fonts-dejavu-core \
+        fonts-liberation \
         libglib2.0-0 \
         libsm6 \
         libxrender1 \
@@ -91,6 +99,8 @@ RUN apt update && \
 # 先复制需求文件和版本信息（这些文件变化较少，有利于缓存）
 COPY --from=requirements-stage /tmp/requirements.txt /app/zhenxun/requirements.txt
 COPY --from=metadata-stage /tmp/VERSION /app/VERSION
+COPY ./dockerfiles/fonts/ /usr/share/fonts/truetype/custom/
+RUN fc-cache -fv
 
 # 最后复制应用代码和设置权限（这些文件变化较频繁）
 COPY . .
