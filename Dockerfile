@@ -66,6 +66,24 @@ RUN apt update && \
         libpangocairo-1.0-0 \
         libxrandr2 \
         libasound2 \
+        libxkbcommon0 \
+        libxkbcommon-x11-0 \
+        libxss1 \
+        libgconf-2-4 \
+        libxfixes3 \
+        libxcursor1 \
+        libgtk-3-0 \
+        libgdk-pixbuf2.0-0 \
+        libcairo-gobject2 \
+        libdbus-glib-1-2 \
+        libatspi2.0-0 \
+        libappindicator3-1 \
+        libsecret-1-0 \
+        xdg-utils \
+        wget \
+        ca-certificates \
+        gnupg \
+        lsb-release \
     && fc-cache -fv \
     && apt clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
